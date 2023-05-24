@@ -15,16 +15,33 @@ Home
             <div class="card" style="width: 18rem;">
                 <img src="{{ url_for('views.get_document_image', document_id=document.id) }}" class="card-img-top" alt="Document Preview" style="width:200px;height:200px;">
                 <div class="card-body">
-                  <p class="card-text text-uppercase">{{ document.name }}</p>
+                  <p class="card-text text-center text-uppercase"><strong>{{ document.name.split('.', 1)[0] }}</strong></p>
                 </div>
-                <button type="button" class="btn btn-sm btn-danger close" onclick="deleteNote({{ document.id }})">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <ul class="list-inline d-flex justify-content-evenly">
+                    <li class="list-inline-item">
+                        <a href="{{ url_for('views.delete_document', document_id=document.id) }}" class="mt-1 btn btn-sm btn-outline-danger close">
+                            <span aria-hidden="true">Delete</span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="{{ url_for('views.ocr', document_id=document.id) }}" class="mt-1 btn btn-sm btn-outline-success close">
+                            <span aria-hidden="true">Get Text</span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="{{ url_for('views.socr', document_id=document.id) }}" class="mt-1 btn btn-sm btn-outline-primary close">
+                            <span aria-hidden="true">S-OCR</span>
+                        </a>
+                    </li>
+                </ul>
+                              
+                
             </div>
     </div>
     
     {% endfor %}
 </div>
+
 <form class="mt-5" method="POST" enctype="multipart/form-data">
     <div class="form-group">
         <input type="file" name="file" id="file" class="form-control" required>
