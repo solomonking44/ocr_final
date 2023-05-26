@@ -1,15 +1,22 @@
 import requests
+import json
 
-url = 'https://writer.zoho.com/writer/officeapi/v1/document'
-data = {
-    'apikey': 'a962b1868966a007667c7c5f1bf74e72',
-    'editor_settings': '{"unit":"in","language":"en","view":"pageview"}',
-    'permissions': '{"document.export":true,"document.print":true,"document.edit":true,"review.changes.resolve":false,"review.comment":true,"collab.chat":true}',
-    'callback_settings': '{"save_format":"docx","save_url":"http://localhost:5000/","context_info":"User or Doc Info"}',
-    'document_info': '{"document_name":"Untitled Document","document_id":"567890123"}',
-    'user_info': '{"user_id":"1000","display_name":"Alice"}',
-    'document_defaults': '{"orientation":"portrait","paper_size":"Letter","font_name":"Lato","font_size":12,"track_changes":"disabled"}'
+url = "https://api.office-integrator.com/writer/officeapi/v1/documents?apikey=a962b1868966a007667c7c5f1bf74e72"
+
+payload = {
+    'apikey': 'a962b1868966a007667c7c5f1bf74e72'
+}
+files=[
+  ('document',('hello.docx','Hello world'))
+]
+headers = {
+  'Cookie': '051913c8ce=b2f3b97207f13ead5d1d3527e09c8d2a; JSESSIONID=686BD1B361CAD1F0E9EB3F754824651E; ZW_CSRF_TOKEN=437ff7a0-834d-48a7-9388-066a1a4c541b; _zcsr_tmp=437ff7a0-834d-48a7-9388-066a1a4c541b'
 }
 
-response = requests.post(url, data=data)
-print(response.text)
+response = requests.request("POST", url, headers=headers, data=payload, files=files)
+
+# print(response.text)
+# print(response)
+
+json_data = json.loads(response.text)
+print(json_data['document_url'])
