@@ -1,0 +1,7 @@
+{
+    "session_delete_url": "https://api.office-integrator.com/writer/officeapi/v1/sessions/1838d05d036ed77332faefc2782f4689190f53c785407e9ab31478e36c3f453cdbd13d022d374f2ccbd0cf0dbc0b43d781c7ac8d830045ee23de20bd87a597ca1ce42ad2b73f6013378667d88df2c686bbc90acac9afd056ce808c0210ce9bfa",
+    "session_id": "1838d05d036ed77332faefc2782f4689190f53c785407e9ab31478e36c3f453cdbd13d022d374f2ccbd0cf0dbc0b43d781c7ac8d830045ee23de20bd87a597ca1ce42ad2b73f6013378667d88df2c686bbc90acac9afd056ce808c0210ce9bfa",
+    "document_delete_url": "https://api.office-integrator.com/writer/officeapi/v1/documents/f476b9d5-6013-4c8b-84f3-156591611808",
+    "document_id": "f476b9d5-6013-4c8b-84f3-156591611808",
+    "document_url": "https://api.office-integrator.com/writer/officeapi/v1/documents/1838d05d036ed77332faefc2782f4689190f53c785407e9ab31478e36c3f453cdbd13d022d374f2ccbd0cf0dbc0b43d781c7ac8d830045ee23de20bd87a597ca1ce42ad2b73f6013378667d88df2c686bbc90acac9afd056ce808c0210ce9bfa/edit"
+}

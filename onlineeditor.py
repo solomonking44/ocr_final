@@ -15,8 +15,5 @@ headers = {
 
 response = requests.request("POST", url, headers=headers, data=payload, files=files)
 
-# print(response.text)
-# print(response)
-
 json_data = json.loads(response.text)
 print(json_data['document_url'])
