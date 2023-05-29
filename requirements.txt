@@ -7,3 +7,4 @@ requests==2.31.0
 SQLAlchemy==2.0.15
 Werkzeug==2.3.4
 opencv-python-headless
+gunicorn
