@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, request, redirect
+from flask import Blueprint, render_template, flash, request, redirect, url_for
 from flask_login import login_required, current_user
 from .models import Document
 from . import db
@@ -20,8 +20,7 @@ def home():
     if request.method == 'GET':
         if request.method == 'GET':
             document_data = [{'id': document.id, 'name': document.file, 'data': document.data} for document in current_user.document_id]
-            # print(document_data['name'])
-            # print(document)
+
             return render_template('index.html', user=current_user, documents=document_data)
 
     elif request.method == 'POST':
@@ -41,17 +40,12 @@ def home():
     else:
         return "Invalid method"
     
-    print(current_user)
-    print(current_user.id)
-    return render_template('index.html', user=current_user)
+    return redirect(url_for('views.home'))
 
 
 
 @views.route('/delete-document/<int:document_id>', methods=['GET'])
 def delete_document(document_id):
-    # data = json.loads(request.data)
-    # print(document_id)
-    # document_id = data['document_id']
     document = Document.query.get(document_id)
     if document:
         if document.user_id == current_user.id:
@@ -62,7 +56,7 @@ def delete_document(document_id):
             flash("This is not your Document", category="error")
     else:
         flash("Document does not exist", category="error")
-    return render_template('index.html', user=current_user)
+    return redirect(url_for('views.home'))
     
 
 @views.route('/get_document_image/<int:document_id>', methods=['GET'])
@@ -98,7 +92,6 @@ def ocr(document_id):
     
     text = pytesseract.image_to_string(image)
     
-    
     #edit text in zoho writer    
     url = "https://api.office-integrator.com/writer/officeapi/v1/documents?apikey=a962b1868966a007667c7c5f1bf74e72"
 
@@ -106,7 +99,7 @@ def ocr(document_id):
         'apikey': 'a962b1868966a007667c7c5f1bf74e72'
     }
     files=[
-    ('document',('hello.docx',text))
+    ('document',(document.file.split('.', 1)[0], text))
     ]
     headers = {
     'Cookie': '051913c8ce=b2f3b97207f13ead5d1d3527e09c8d2a; JSESSIONID=686BD1B361CAD1F0E9EB3F754824651E; ZW_CSRF_TOKEN=437ff7a0-834d-48a7-9388-066a1a4c541b; _zcsr_tmp=437ff7a0-834d-48a7-9388-066a1a4c541b'
@@ -147,7 +140,4 @@ def socr(document_id):
     for item in data['result'][0]['prediction']:
         filtered_item = {item['label']: item['ocr_text']}
         filtered_data.append(filtered_item)
-        
-
-    print(filtered_data)
     return filtered_data
