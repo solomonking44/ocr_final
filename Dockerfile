@@ -1,10 +1,12 @@
 # Use a Python base image
 FROM python:3.8-slim
 
-# Install Tesseract OCR and other dependencies
+# Install Tesseract OCR, ImageMagick, and other dependencies
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     libtesseract-dev \
+    imagemagick \
+    libmagickwand-dev \
     && apt-get clean
 
 # Set the working directory in the container
@@ -23,7 +25,7 @@ COPY . .
 EXPOSE 8080
 
 # Set the environment variable for Flask
-ENV FLASK_APP=app.py
+ENV FLASK_APP=wsgi.py
 
 # Run the Flask app on port 8080
 CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]

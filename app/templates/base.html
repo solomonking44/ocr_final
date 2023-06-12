@@ -6,13 +6,18 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+  <link rel="shortcut icon" href="{{url_for('static', filename='images/favicon.png')}}" type="image/x-icon">
   <title>{% block title %} {% endblock %}</title>
 </head>
 
-<body>
+<body class="bg-light">
   <!-- navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Notes</a>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+    <a class="navbar-brand" href="#">
+      <img src="{{url_for('static', filename='images/favicon.png')}}" alt="" width="30" height="24" class="d-inline-block align-text-top">
+      Selective OCR
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -26,19 +31,13 @@
         <li class="nav-item">
           <a class="nav-link" href="logout">Logout</a>
         </li>
-        {% else %}
-        <li class="nav-item active">
-          <a class="nav-link" href="login">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="signup">Sign Up</a>
-        </li>
         {% endif %}
       </ul>
     </div>
+  </div>
   </nav>
 
-  <div class="container mb-5">
+  <div class="container">
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
