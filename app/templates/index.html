@@ -8,30 +8,31 @@ Selective OCR
 
 <h1 class="text-center">Documents</h1>
 <p class="text-muted text-center">Upload new Documents</p>
+
 <div class="row">
 
     {% for document in documents %}
     <div class="col-md-3 col-xs-6" style="width: 18em;">
         <div class="image d-flex justify-content-center">
-            <img src="{{ url_for('views.get_document_image', document_id=document.id) }}" class="d-flex justify-content-center img-thumbnail" alt="Document Preview" style="width:200px;height:200px;">
+            <img title="{{ document.name.split('.', 1)[0] }}" src="{{ url_for('views.get_document_image', document_id=document.id) }}" class="d-flex justify-content-center img-thumbnail" alt="Document Preview" style="width:200px;height:200px;">
         </div>
         <div class="card-body">
-            <p class="card-text text-center text-uppercase text-wrap"><strong>{{ document.name.split('.', 1)[0] }}</strong></p>
+            <p class="card-text text-center text-uppercase text-wrap" style="max-height:30px;"><strong>{{ document.name.split('.', 1)[0] }}</strong></p>
         </div>
         <div class="buttons">
             <ul class="list-inline d-flex justify-content-center">
                 <li class="list-inline-item">
-                    <a href="{{ url_for('views.delete_document', document_id=document.id) }}" class="mt-1 btn btn-sm btn-outline-danger close">
+                    <a href="{{ url_for('views.delete_document', document_id=document.id) }}" class="mt-1 btn btn-sm btn-outline-danger close" title="Delete Document">
                         <span aria-hidden="true">Delete</span>
                     </a>
                 </li>
                 <li class="list-inline-item">
-                    <a href="{{ url_for('views.ocr', document_id=document.id) }}" target="_blank" class="mt-1 btn btn-sm btn-outline-success close">
+                    <a href="{{ url_for('views.ocr', document_id=document.id) }}" target="_blank" class="mt-1 btn btn-sm btn-outline-success close" title="Get Text from Document">
                         <span aria-hidden="true">Get Text</span>
                     </a>
                 </li>
                 <li class="list-inline-item">
-                    <a href="{{ url_for('views.socr', document_id=document.id) }}" target="_blank" class="mt-1 btn btn-sm btn-outline-primary close">
+                    <a href="{{ url_for('views.socr', document_id=document.id) }}" target="_blank" class="mt-1 btn btn-sm btn-outline-primary close" title="Selective OCR for Document">
                         <span aria-hidden="true">S-OCR</span>
                     </a>
                 </li>

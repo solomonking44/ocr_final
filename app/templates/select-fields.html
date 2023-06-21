@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+select fields
+{% endblock %}
+
+{% block body %}
+<form method="POST" action="{{ url_for('views.edit_socr') }}">
+    <input type="text" name='document_name' value='{{document_name}}' hidden>
+    {% if data %}
+        {% for item in data %}
+            {% for key, value in item.items() %}
+                <input type="checkbox" name="fields" value="{{key}}|{{value}}" checked>
+                <label>{{ key }}</label>
+                <br>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+
+    <button type="submit">
+        Submit
+    </button>
+</form>
+
+{% endblock %}

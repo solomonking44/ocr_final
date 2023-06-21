@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, request, redirect, url_for
+from flask import Blueprint, render_template, flash, request, redirect, url_for, send_file
 from flask_login import login_required, current_user
 from .models import Document
 from . import db
@@ -14,6 +14,7 @@ import requests
 from PIL import Image
 from io import BytesIO
 import csv
+import io
 
 views = Blueprint('views', __name__)
 
@@ -190,34 +191,96 @@ def socr(document_id):
     response = requests.post(url, auth=requests.auth.HTTPBasicAuth('78d1996a-9789-11ed-b6de-a693374d4922', ''), files=data)
 
     data = json.loads(response.text)
-
-    # Extract the headers from the first dictionary in the list
+    
+        # Extract the headers from the first dictionary in the list
     filtered_data = []
     for item in data['result'][0]['prediction']:
         filtered_item = {item['label']: item['ocr_text']}
         filtered_data.append(filtered_item)
+    
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    # TEST 1
+    #
+    # document = Document.query.get_or_404(document_id)
+    # document_name = document.file.split('.', 1)[0]
+    
+    # url = "http://localhost:3000/json-data"
+    # headers = {}
+    # payload ={}
+    
+    # response = requests.request('GET', url, headers = headers, data = payload)
+    
+    # data = json.loads(response.text)
+    
+    # # Extract the headers from the first dictionary in the list
+    # filtered_data = []
+    # for item in data['result'][0]['prediction']:
+    #     filtered_item = {item['label']: item['ocr_text']}
+    #     filtered_data.append(filtered_item)
+    
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+        
+    return render_template('select-fields.html', data = filtered_data, user=current_user, document_name = document_name)
+     
 
-    # Create a temporary CSV file
-    with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix=".csv") as file:
+
+
+
+@views.route('/edit-socr', methods=['GET','POST'])
+@login_required
+def edit_socr():
+    selected_fields = request.form.getlist('fields')
+    document_name = request.form.get('document_name')
+    
+    # Create a dictionary to store the selected fields
+    selected_data = {}
+    for field in selected_fields:
+        key, value = field.split('|')
+        selected_data[key] = value
+
+    # Convert the selected_data dictionary to a CSV file
+    csv_data = []
+    csv_header = []
+    for key, value in selected_data.items():
+        csv_header.append(key)
+        csv_data.append(value)
+
+    # Create a file-like object in memory
+    csv_buffer = io.StringIO()
+    csv_writer = csv.writer(csv_buffer)
+    csv_writer.writerow(csv_header)  # Write the header
+    csv_writer.writerow(csv_data)  # Write the data row
+    csv_buffer.seek(0)  # Reset the buffer's position to the beginning
+
+
+    # # Create a temporary CSV file
+    with tempfile.NamedTemporaryFile(mode='w', delete=False) as file:
         csv_file = file.name
 
-        # Get all unique labels from the filtered data
-        labels = set(label for item in filtered_data for label in item.keys())
-
-        # Write the data to the CSV file
-        writer = csv.DictWriter(file, fieldnames=labels)
-        writer.writeheader()
-        writer.writerows(filtered_data)
-
-    # # Read and print the contents of the CSV file
-    with open(csv_file, 'r') as file:
-        csv_contents = file.read()
-
-    print("CSV file contents:")
-    print(csv_contents)
-
-    # # Edit CSV in Zoho Sheet
-    document_name = document.file.split('.', 1)[0]
+        # Write the CSV data to the temporary file
+        with open(csv_file, 'w') as f:
+            f.write(csv_buffer.getvalue())
+    
+        # # # Edit CSV in Zoho Sheet
 
     url = "https://api.office-integrator.com/sheet/officeapi/v1/spreadsheet?apikey=a962b1868966a007667c7c5f1bf74e72"
 
@@ -240,7 +303,10 @@ def socr(document_id):
         print("Response content:")
         print(response.text)
         return response.text
+    
+    # return csv_header
 
     # print(data['document_url'])
     return redirect(data['document_url'])
 
+    
