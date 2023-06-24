@@ -15,6 +15,7 @@ from PIL import Image
 from io import BytesIO
 import csv
 import io
+import webbrowser
 
 views = Blueprint('views', __name__)
 
@@ -197,6 +198,8 @@ def socr(document_id):
     for item in data['result'][0]['prediction']:
         filtered_item = {item['label']: item['ocr_text']}
         filtered_data.append(filtered_item)
+        
+    document_name = document.file.split('.', 1)[0]
     
     #
     #
@@ -307,6 +310,12 @@ def edit_socr():
     # return csv_header
 
     # print(data['document_url'])
+
     return redirect(data['document_url'])
+    
 
     
+@views.route('/model/<int:document_id>', methods=['GET','POST'])
+@login_required
+def select_model(document_id):
+    return render_template('select-model.html', user = current_user, document_id = document_id)

@@ -5,6 +5,7 @@ select fields
 {% endblock %}
 
 {% block body %}
+<h5 class="mt-3">Select Fields to extract</h5>
 <form method="POST" action="{{ url_for('views.edit_socr') }}">
     <input type="text" name='document_name' value='{{document_name}}' hidden>
     {% if data %}
@@ -17,8 +18,8 @@ select fields
         {% endfor %}
     {% endif %}
 
-    <button type="submit">
-        Submit
+    <button type="submit" class="btn mt-4 btn-sm btn-success">
+        Extract
     </button>
 </form>
 
