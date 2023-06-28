@@ -15,6 +15,9 @@ WORKDIR /app
 # Copy the requirements file to the container
 COPY requirements.txt .
 
+# Copy the policy.xml file to the container
+COPY policy.xml /etc/ImageMagick-6/policy.xml
+
 # Install the Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 

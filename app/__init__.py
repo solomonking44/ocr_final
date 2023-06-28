@@ -17,11 +17,13 @@ def create_app():
     
     from .views import views
     from .auth import auth
+    from .user import user
     
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(user, url_prefix='/')
     
-    from .models import User, Document, Result
+    from .models import User, Document, Temp
     
     create_database(app)
 
@@ -39,6 +41,6 @@ def create_database(app):
     if not path.exists('include/' + DB_NAME):
         with app.app_context():
             db.create_all()
-            print("Account Created!")
+            print("Database Created!")
             # flash("Account Created", category="success")
         

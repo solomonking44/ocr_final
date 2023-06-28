@@ -19,14 +19,15 @@ import webbrowser
 
 views = Blueprint('views', __name__)
 
-@views.route('/', methods=['GET', 'POST'])
+
+@views.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
     if request.method == 'GET':
         if request.method == 'GET':
             document_data = [{'id': document.id, 'name': document.file, 'data': document.data} for document in current_user.document_id]
 
-            return render_template('index.html', user=current_user, documents=document_data)
+            return render_template('home.html', user=current_user, documents=document_data)
 
     elif request.method == 'POST':
         file = request.files['file']
@@ -46,7 +47,6 @@ def home():
         return "Invalid method"
     
     return redirect(url_for('views.home'))
-
 
 
 @views.route('/delete-document/<int:document_id>', methods=['GET'])
@@ -122,6 +122,10 @@ def ocr(document_id):
         flash("Unsupported file format", category='error')
         return redirect(url_for('views.home'))
     
+    # if text == " ":
+    #     flash("Image is too dark for processing", category="error")
+    #     return redirect(url_for('views.home'))
+
     # Edit text in Zoho Writer
     url = "https://api.office-integrator.com/writer/officeapi/v1/documents?apikey=a962b1868966a007667c7c5f1bf74e72"
     payload = {
@@ -139,6 +143,26 @@ def ocr(document_id):
     json_data = json.loads(response.text)
     print(json_data['document_url'])
     return redirect(json_data['document_url'])
+
+def preprocess_image(image):
+    
+    # Convert image to grayscale
+    gray_image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+
+    # Calculate the average pixel value in the image
+    average_pixel_value = cv.mean(gray_image)[0]
+    
+    print(f'average_pixel_value {average_pixel_value}')
+
+    # Determine if the image has a black background
+    has_black_background = average_pixel_value < 150
+
+    if has_black_background:
+        # Invert colors for black background images
+        image = cv.bitwise_not(image)
+    
+    return image
+
 
 def extract_text_from_pdf(pdf_data):
     with tempfile.NamedTemporaryFile(delete=False) as temp_pdf_file:
@@ -163,11 +187,33 @@ def extract_text_from_image(image_data):
         temp_image_file.write(image_data)
         
     image = cv.imread(temp_filepath)
-    text = pytesseract.image_to_string(image)
+    preprocessed_image = preprocess_image(image)
+    text = pytesseract.image_to_string(preprocessed_image)
     
     os.unlink(temp_filepath)
     
+    print(text)
+    
     return text
+
+
+# def extract_text_from_image(image_data):
+#     temp_dir = tempfile.gettempdir()
+#     temp_filename = "temp_image.jpg"
+#     temp_filepath = os.path.join(temp_dir, temp_filename)
+    
+#     with open(temp_filepath, 'wb') as temp_image_file:
+#         temp_image_file.write(image_data)
+        
+#     image = cv.imread(temp_filepath, cv.COLOR_BGR2GRAY)
+#     image = cv.GaussianBlur(image, )
+#     text = pytesseract.image_to_string(image)
+
+    
+#     os.unlink(temp_filepath)
+#     print(text)
+    
+#     return text
 
 
 

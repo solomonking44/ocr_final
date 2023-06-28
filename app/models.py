@@ -10,7 +10,6 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     document_id = db.relationship('Document')
-    result_id = db.relationship('Result')
     
 
 class Document(db.Model):
@@ -20,10 +19,9 @@ class Document(db.Model):
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
-    
-class Result(db.Model):
+class Temp(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    result = db.Column(db.String(1000))
+    file = db.Column(db.String(255))
+    data = db.Column(db.LargeBinary)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
