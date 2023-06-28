@@ -74,7 +74,7 @@ def ocr(file_name, file_data):
     response = requests.request("POST", url, headers=headers, data=payload, files=files)
 
     json_data = json.loads(response.text)
-    print(json_data['document_url'])
+    # print(json_data['document_url'])
     # return json_data['document_url']
     link = json_data['document_url']
     return link
@@ -127,6 +127,6 @@ def extract_text_from_image(image_data):
     
     os.unlink(temp_filepath)
     
-    print(text)
+    # print(text)
     
     return text

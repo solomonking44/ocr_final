@@ -220,32 +220,32 @@ def extract_text_from_image(image_data):
 @views.route('/socr/<int:document_id>', methods=['GET'])
 @login_required
 def socr(document_id):
-    document = Document.query.get_or_404(document_id)
+    # document = Document.query.get_or_404(document_id)
 
-    # Save the image data to a temporary file
-    temp_dir = tempfile.gettempdir()
-    temp_filename = f"document_{document_id}.jpg"
-    temp_filepath = os.path.join(temp_dir, temp_filename)
-    with open(temp_filepath, 'wb') as file:
-        file.write(document.data)
+    # # Save the image data to a temporary file
+    # temp_dir = tempfile.gettempdir()
+    # temp_filename = f"document_{document_id}.jpg"
+    # temp_filepath = os.path.join(temp_dir, temp_filename)
+    # with open(temp_filepath, 'wb') as file:
+    #     file.write(document.data)
 
-    image = cv.imread(temp_filepath)
+    # image = cv.imread(temp_filepath)
 
-    url = 'https://app.nanonets.com/api/v2/OCR/Model/ceeebab1-5f48-4ce9-845e-066b81ce3d97/LabelFile/?async=false'
+    # url = 'https://app.nanonets.com/api/v2/OCR/Model/ceeebab1-5f48-4ce9-845e-066b81ce3d97/LabelFile/?async=false'
 
-    data = {'file': open(temp_filepath, 'rb')}
+    # data = {'file': open(temp_filepath, 'rb')}
 
-    response = requests.post(url, auth=requests.auth.HTTPBasicAuth('78d1996a-9789-11ed-b6de-a693374d4922', ''), files=data)
+    # response = requests.post(url, auth=requests.auth.HTTPBasicAuth('78d1996a-9789-11ed-b6de-a693374d4922', ''), files=data)
 
-    data = json.loads(response.text)
+    # data = json.loads(response.text)
     
-        # Extract the headers from the first dictionary in the list
-    filtered_data = []
-    for item in data['result'][0]['prediction']:
-        filtered_item = {item['label']: item['ocr_text']}
-        filtered_data.append(filtered_item)
+    #     # Extract the headers from the first dictionary in the list
+    # filtered_data = []
+    # for item in data['result'][0]['prediction']:
+    #     filtered_item = {item['label']: item['ocr_text']}
+    #     filtered_data.append(filtered_item)
         
-    document_name = document.file.split('.', 1)[0]
+    # document_name = document.file.split('.', 1)[0]
     
     #
     #
@@ -256,22 +256,22 @@ def socr(document_id):
     #
     # TEST 1
     #
-    # document = Document.query.get_or_404(document_id)
-    # document_name = document.file.split('.', 1)[0]
+    document = Document.query.get_or_404(document_id)
+    document_name = document.file.split('.', 1)[0]
     
-    # url = "http://localhost:3000/json-data"
-    # headers = {}
-    # payload ={}
+    url = "http://localhost:3000/json-data"
+    headers = {}
+    payload ={}
     
-    # response = requests.request('GET', url, headers = headers, data = payload)
+    response = requests.request('GET', url, headers = headers, data = payload)
     
-    # data = json.loads(response.text)
+    data = json.loads(response.text)
     
-    # # Extract the headers from the first dictionary in the list
-    # filtered_data = []
-    # for item in data['result'][0]['prediction']:
-    #     filtered_item = {item['label']: item['ocr_text']}
-    #     filtered_data.append(filtered_item)
+    # Extract the headers from the first dictionary in the list
+    filtered_data = []
+    for item in data['result'][0]['prediction']:
+        filtered_item = {item['label']: item['ocr_text']}
+        filtered_data.append(filtered_item)
     
     #
     #

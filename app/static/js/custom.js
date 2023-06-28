@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    $('.toast').toast('show');
     $('#image_to_text').click(function(event) {
       event.preventDefault();
       $('#file').trigger('click');

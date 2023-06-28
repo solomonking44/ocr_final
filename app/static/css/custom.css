@@ -1,5 +1,4 @@
 #intro {
-    background-image: url("{{url_for('static', filename='images/bg.png')}}");
     background-repeat: no-repeat;
     background-size: cover;
     height: 100vh;
@@ -49,4 +48,9 @@
     to {
       transform: rotate(360deg);
     }
+  }
+
+  .favicon{
+    height: 1rem;
+    width: 1rem;
   }
